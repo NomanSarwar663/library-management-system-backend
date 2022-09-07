@@ -9,7 +9,7 @@ const port = process.env.PORT || API_PORT;
 
 const authRoutes = require("./routes/auth.routes");
 const bookRoutes = require("./routes/book.routes");
-const bookActionRoutes = require("./routes/bookAction.routes");
+const bookActionRoutes = require("./routes/bookHandler.routes");
 
 app.use(express.json());
 app.use(cors());

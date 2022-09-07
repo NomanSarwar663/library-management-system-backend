@@ -1,9 +1,9 @@
-const { bookActionService } = require("../services");
+const { bookHandlerService } = require("../services");
 const { formatResponse } = require("../helpers/utility");
 
 async function checkIn(req, res) {
   try {
-    const response = await bookActionService.checkIn(req.id);
+    const response = await bookHandlerService.checkIn(req.id);
     if (response) {
       return res.status(response.statusCode).json(response);
     }
@@ -17,7 +17,7 @@ async function checkIn(req, res) {
 
 async function checkOut(req, res) {
   try {
-    const response = await bookActionService.checkOut(req.body, req.id);
+    const response = await bookHandlerService.checkOut(req.body, req.id);
     if (response) {
       return res.status(response.statusCode).json(response);
     }

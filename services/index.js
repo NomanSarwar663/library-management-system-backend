@@ -1,6 +1,6 @@
 const { register, login } = require("./auth.service");
 const { registerBook, getAllBooks, getBookDetails } = require("./book.service");
-const { checkIn, checkOut } = require("./bookAction.service");
+const { checkIn, checkOut } = require("./bookHandler.service");
 
 const authService = {
   register,
