@@ -1,8 +1,21 @@
 const { router } = require("../app");
-const bookHandlerController = require("../controllers/bookHandler.controller");
+const bookHandlingController = require("../controllers/bookHandler.controller");
 const { requireSignin } = require("../middleware/authorization");
 
-router.post("/:id/check-in", requireSignin, bookHandlerController.checkIn);
-router.post("/:id/check-out", requireSignin, bookHandlerController.checkOut);
+router.get(
+  "/book/:id/checked-out-details",
+  requireSignin,
+  bookHandlingController.getcheckedOutDetails
+);
+router.post(
+  "/book/:id/check-in",
+  requireSignin,
+  bookHandlingController.checkIn
+);
+router.post(
+  "/book/:id/check-out",
+  requireSignin,
+  bookHandlingController.checkOut
+);
 
 module.exports = router;
