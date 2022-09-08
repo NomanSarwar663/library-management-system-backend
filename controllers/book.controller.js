@@ -1,7 +1,7 @@
 const { bookService } = require("../services");
 const { formatResponse } = require("../helpers/utility");
 
-async function register(req, res) {
+async function registerBook(req, res) {
   try {
     const response = await bookService.registerBook(req.body);
     if (response) {
@@ -31,7 +31,7 @@ async function getAllBooks(req, res) {
 
 async function getBookDetails(req, res) {
   try {
-    const response = await bookService.getBookDetails(req.id);
+    const response = await bookService.getBookDetails(req.url.split("/").pop());
     if (response) {
       return res.status(response.statusCode).json(response);
     }
@@ -44,7 +44,7 @@ async function getBookDetails(req, res) {
 }
 
 module.exports = {
-  register,
+  registerBook,
   getAllBooks,
   getBookDetails,
 };

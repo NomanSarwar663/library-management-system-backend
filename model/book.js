@@ -36,13 +36,28 @@ const bookSchema = new mongoose.Schema(
     },
     issuedDetails: {
       issuer: {
-        type: Object,
+        name: {
+          type: String,
+          trim: true,
+          max: 20,
+          default: null,
+        },
+        phoneNo: {
+          type: String,
+          trim: true,
+          max: 15,
+          default: null,
+        },
+        nationalID: {
+          type: String,
+          length: 11,
+          default: null,
+        },
       },
       issuedDate: {
         type: Date,
-        default: new Date(),
       },
-      returnedDate: {
+      returnDate: {
         type: Date,
       },
     },

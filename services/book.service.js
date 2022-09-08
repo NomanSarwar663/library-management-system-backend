@@ -42,14 +42,14 @@ async function getAllBooks() {
 }
 
 async function getBookDetails(_id) {
-  const book = await Book.findById(_id);
+  const book = await Book.findOne({ _id });
 
   if (book) {
     return formatResponse(200, "Success", "Get Book detail Successfully", {
       book,
     });
   }
-  throw new BaseError("Invalid credentials", 404);
+  throw new BaseError("Invalid book ID", 404);
 }
 
 module.exports = {

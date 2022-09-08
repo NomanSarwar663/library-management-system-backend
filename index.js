@@ -9,14 +9,14 @@ const port = process.env.PORT || API_PORT;
 
 const authRoutes = require("./routes/auth.routes");
 const bookRoutes = require("./routes/book.routes");
-const bookActionRoutes = require("./routes/bookHandler.routes");
+const bookHandlerRoutes = require("./routes/bookHandler.routes");
 
 app.use(express.json());
 app.use(cors());
 
 app.use(authRoutes);
 app.use(bookRoutes);
-app.use(bookActionRoutes);
+app.use(bookHandlerRoutes);
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);

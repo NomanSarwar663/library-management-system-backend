@@ -31,11 +31,7 @@ async function register(data) {
     password: await bcrypt.hash(password, 10),
   });
 
-  return formatResponse(
-    201,
-    "Success",
-    "User account created"
-  );
+  return formatResponse(201, "Success", "User account created");
 }
 
 async function login(data) {
@@ -45,7 +41,7 @@ async function login(data) {
     throw new BaseError("Email and password is required", 404);
   }
   const user = await User.findOne({ email });
-  console.log(process.env.JWT_TOKEN_KEY)
+  console.log(process.env.JWT_TOKEN_KEY);
   if (user && (await bcrypt.compare(password, user.password))) {
     token = jwt.sign(
       { _id: user._id, role: user.role, email: user.email },
@@ -65,5 +61,5 @@ async function login(data) {
 
 module.exports = {
   register,
-  login
+  login,
 };

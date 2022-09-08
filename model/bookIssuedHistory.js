@@ -11,26 +11,29 @@ const bookHistorySchema = new mongoose.Schema(
         issuer: {
           name: {
             type: String,
-            required: true,
             trim: true,
-            min: 3,
             max: 20,
+            default: null,
           },
           phoneNo: {
             type: String,
-            required: true,
             trim: true,
-            min: 10,
             max: 15,
+            default: null,
+          },
+          nationalID: {
+            type: String,
+            length: 11,
+            default: null,
           },
         },
         checkoutDate: {
           type: Date,
-          required: true,
+          default: null,
         },
         checkinDate: {
           type: Date,
-          required: true,
+          default: null,
         },
       },
     ],
