@@ -70,10 +70,19 @@ const bookCheckoutSchema = Joi.object({
     "string.empty": `PhoneNo cannot be empty`,
     "any.required": `PhoneNo is required`,
   }),
-  nationalID: Joi.number().required().messages({
-    "string.empty": `National ID number cannot be empty`,
-    "any.required": `National ID number is required`,
-  }),
+  nationalID: Joi.string().min(11).max(11)
+  .pattern(
+    new RegExp(
+      "^[0-9]"
+    )
+  )
+  .required()
+    .messages({
+      "string.empty": `National ID number cannot be empty`,
+      "any.required": `National ID number is required`,
+      "string.min": `National ID must be 11 digits long number`,
+      "string.max": `National ID must be 11 digits long number`,
+    }),
   checkOutDate: Joi.string().required().messages({
     "string.empty": `Check out date cannot be empty`,
     "any.required": `Check out date is required`,

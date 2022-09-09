@@ -31,7 +31,23 @@ async function register(data) {
     password: await bcrypt.hash(password, 10),
   });
 
-  return formatResponse(201, "Success", "User account created");
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const token = jwt.sign(
+      { user_id: user._id, email },
+      process.env.JWT_TOKEN_KEY,
+      {
+        expiresIn: "24h",
+      }
+    );
+
+    return formatResponse(201, "Success", "User account created", {
+      user,
+      token,
+    });
+  }
+  throw new BaseError("Unable to register a user", 400);
 }
 
 async function login(data) {
@@ -44,7 +60,7 @@ async function login(data) {
   console.log(process.env.JWT_TOKEN_KEY);
   if (user && (await bcrypt.compare(password, user.password))) {
     token = jwt.sign(
-      { _id: user._id, role: user.role, email: user.email },
+      { _id: user._id, email: user.email },
       process.env.JWT_TOKEN_KEY,
       {
         expiresIn: "48h",

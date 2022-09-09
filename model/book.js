@@ -1,3 +1,4 @@
+const { object } = require("joi");
 const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema(
@@ -36,23 +37,8 @@ const bookSchema = new mongoose.Schema(
     },
     issuedDetails: {
       issuer: {
-        name: {
-          type: String,
-          trim: true,
-          max: 20,
-          default: null,
-        },
-        phoneNo: {
-          type: String,
-          trim: true,
-          max: 15,
-          default: null,
-        },
-        nationalID: {
-          type: String,
-          length: 11,
-          default: null,
-        },
+        type: Object,
+        default: null,
       },
       issuedDate: {
         type: Date,

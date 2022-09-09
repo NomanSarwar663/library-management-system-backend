@@ -31,7 +31,7 @@ async function getAllBooks(req, res) {
 
 async function getBookDetails(req, res) {
   try {
-    const response = await bookService.getBookDetails(req.url.split("/").pop());
+    const response = await bookService.getBookDetails(req.params.id);
     if (response) {
       return res.status(response.statusCode).json(response);
     }

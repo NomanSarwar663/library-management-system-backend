@@ -4,14 +4,13 @@ const { BaseError } = require("../helpers/ErrorHandling");
 const Book = require("../model/book");
 const BookIssuedHistory = require("../model/bookIssuedHistory");
 
-async function getcheckedOutDetails(_id) {
+async function getIssuedDetails(_id) {
   const book = await Book.findOne({ _id });
 
   if (book) {
     if (
       book.issuedDetails &&
-      book.issuedDetails.issuer &&
-      book.issuedDetails.returnDate
+      book.issuedDetails.issuer
     ) {
       const checkedOutDetails = {
         issuer: book.issuedDetails.issuer,
@@ -34,10 +33,9 @@ async function checkIn(_id) {
   if (book) {
     if (
       book.issuedDetails &&
-      book.issuedDetails.issuer &&
-      book.issuedDetails.returnDate
+      book.issuedDetails.issuer
     ) {
-      const bookHistory = BookIssuedHistory.findOne({ bookId: _id });
+      const bookHistory = await BookIssuedHistory.findOne({ bookId: _id });
 
       if (bookHistory && bookHistory.bookId && bookHistory.history) {
         bookHistory.history.unshift({
@@ -45,8 +43,17 @@ async function checkIn(_id) {
           checkoutDate: book.issuedDetails.issuedDate,
           checkinDate: new Date(),
         });
+
+        await BookIssuedHistory.findOneAndUpdate(
+          { bookId: _id },
+          {
+            $set: {
+              history: bookHistory.history,
+            },
+          }
+        );
       } else {
-        BookIssuedHistory.create({
+        await BookIssuedHistory.create({
           bookId: _id,
           history: [
             {
@@ -64,11 +71,7 @@ async function checkIn(_id) {
           $set: {
             status: "check-in",
             issuedDetails: {
-              issuer: {
-                name: null,
-                phoneNo: null,
-                nationalID: null,
-              },
+              issuer: null,
               issuedDate: null,
               returnDate: null,
             },
@@ -78,7 +81,7 @@ async function checkIn(_id) {
 
       return formatResponse(200, "Success", "Book check-in successfully");
     }
-    return formatResponse(200, "Error", "This book is not issued");
+    return formatResponse(422, "Error", "This book is not issued");
   }
 
   throw new BaseError("No Book found", 404);
@@ -99,28 +102,38 @@ async function checkOut(data, _id) {
     return createResponse(response);
   }
 
-  await Book.findOneAndUpdate(
-    { _id },
-    {
-      $set: {
-        status: "check-out",
-        issuedDetails: {
-          issuer: {
-            name,
-            phoneNo,
-            nationalID,
+  const book = await Book.findOne({ _id });
+
+  if (book) {
+    if (book.status === "check-in") {
+      await Book.findOneAndUpdate(
+        { _id },
+        {
+          $set: {
+            status: "check-out",
+            issuedDetails: {
+              issuer: {
+                name,
+                phoneNo,
+                nationalID,
+              },
+              issuedDate: checkOutDate,
+              returnDate,
+            },
           },
-          issuedDate: checkOutDate,
-          returnDate,
-        },
-      },
+        }
+      );
+
+      return formatResponse(200, "Success", "Book Checkout Successfully");
     }
-  );
-  return formatResponse(200, "Success", "Book Checkout Successfully");
+    return formatResponse(422, "Error", "Book already check-out");
+  }
+
+  throw new BaseError("No Book found", 404);
 }
 
 module.exports = {
-  getcheckedOutDetails,
+  getIssuedDetails,
   checkIn,
   checkOut,
 };
