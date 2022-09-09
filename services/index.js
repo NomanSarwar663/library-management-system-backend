@@ -1,7 +1,7 @@
 const { register, login } = require("./auth.service");
 const { registerBook, getAllBooks, getBookDetails } = require("./book.service");
 const {
-  getcheckedOutDetails,
+  getIssuedDetails,
   checkIn,
   checkOut,
 } = require("./bookHandler.service");
@@ -18,7 +18,7 @@ const bookService = {
 };
 
 const bookHandlingService = {
-  getcheckedOutDetails,
+  getIssuedDetails,
   checkIn,
   checkOut,
 };

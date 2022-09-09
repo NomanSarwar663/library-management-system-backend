@@ -1,10 +1,10 @@
 const { bookHandlingService } = require("../services");
 const { formatResponse } = require("../helpers/utility");
 
-async function getcheckedOutDetails(req, res) {
+async function getIssuedDetails(req, res) {
   try {
-    const response = await bookHandlingService.getcheckedOutDetails(
-      req.url.split("/")[2]
+    const response = await bookHandlingService.getIssuedDetails(
+      req.params.id
     );
     if (response) {
       return res.status(response.statusCode).json(response);
@@ -19,7 +19,7 @@ async function getcheckedOutDetails(req, res) {
 
 async function checkIn(req, res) {
   try {
-    const response = await bookHandlingService.checkIn(req.url.split("/")[2]);
+    const response = await bookHandlingService.checkIn(req.params.id);
     if (response) {
       return res.status(response.statusCode).json(response);
     }
@@ -35,7 +35,7 @@ async function checkOut(req, res) {
   try {
     const response = await bookHandlingService.checkOut(
       req.body,
-      req.url.split("/")[2]
+      req.params.id
     );
     if (response) {
       return res.status(response.statusCode).json(response);
@@ -49,7 +49,7 @@ async function checkOut(req, res) {
 }
 
 module.exports = {
-  getcheckedOutDetails,
+  getIssuedDetails,
   checkIn,
   checkOut,
 };

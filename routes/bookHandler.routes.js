@@ -3,9 +3,9 @@ const bookHandlingController = require("../controllers/bookHandler.controller");
 const { requireSignin } = require("../middleware/authorization");
 
 router.get(
-  "/book/:id/checked-out-details",
+  "/book/:id/issued-details",
   requireSignin,
-  bookHandlingController.getcheckedOutDetails
+  bookHandlingController.getIssuedDetails
 );
 router.post(
   "/book/:id/check-in",
