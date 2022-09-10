@@ -2,6 +2,7 @@ const { createResponse, formatResponse } = require("../helpers/utility");
 const validate = require("../helpers/validationSchema");
 const { BaseError } = require("../helpers/ErrorHandling");
 const Book = require("../model/book");
+const BookIssuedHistory = require("../model/bookIssuedHistory");
 
 async function registerBook(data) {
   const { title, isbn, publishYear, coverPrice } = data;
@@ -43,10 +44,19 @@ async function getAllBooks() {
 
 async function getBookDetails(_id) {
   const book = await Book.findOne({ _id });
+  let history = null;
 
   if (book) {
+    const bookHistory = await BookIssuedHistory.findOne({ bookId: _id });
+
+    if (bookHistory && bookHistory.bookId && bookHistory.history)
+      history = bookHistory.history;
+
     return formatResponse(200, "Success", "Get Book detail Successfully", {
-      book,
+      data: {
+        book,
+        bookHistory: history,
+      },
     });
   }
   throw new BaseError("Invalid book ID", 404);
