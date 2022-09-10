@@ -3,21 +3,27 @@ const validate = require("../helpers/validationSchema");
 const { BaseError } = require("../helpers/ErrorHandling");
 const Book = require("../model/book");
 const BookIssuedHistory = require("../model/bookIssuedHistory");
+const { calculatePenalty } = require("../helpers/penaltyCalculator");
 
 async function getIssuedDetails(_id) {
   const book = await Book.findOne({ _id });
 
   if (book) {
-    if (
-      book.issuedDetails &&
-      book.issuedDetails.issuer
-    ) {
+    if (book.issuedDetails && book.issuedDetails.issuer) {
+      const totalLates = calculatePenalty(
+        new Date(),
+        book.issuedDetails.returnDate
+      );
+      let penalty = 0;
+
+      if (totalLates > 0) penalty = totalLates * 5; // Rs: 5 is a penalty of each business day
+
       const checkedOutDetails = {
         issuer: book.issuedDetails.issuer,
         requiredReturnDay: book.issuedDetails.returnDate,
-        penalty: 0,
+        penalty,
       };
-      return formatResponse(200, "Success", "Get Isssued Details", {
+      return formatResponse(200, "Success", "Get Isssued Book Details", {
         checkedOutDetails,
       });
     }
@@ -31,10 +37,7 @@ async function checkIn(_id) {
   const book = await Book.findOne({ _id });
 
   if (book) {
-    if (
-      book.issuedDetails &&
-      book.issuedDetails.issuer
-    ) {
+    if (book.issuedDetails && book.issuedDetails.issuer) {
       const bookHistory = await BookIssuedHistory.findOne({ bookId: _id });
 
       if (bookHistory && bookHistory.bookId && bookHistory.history) {
