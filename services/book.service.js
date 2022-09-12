@@ -38,7 +38,7 @@ async function getAllBooks() {
   const books = await Book.find();
 
   return formatResponse(200, "Success", "Books get Successfully", {
-    books,
+    data: {books}
   });
 }
 

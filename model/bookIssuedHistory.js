@@ -12,11 +12,11 @@ const bookHistorySchema = new mongoose.Schema(
           type: Object,
           default: null,
         },
-        checkoutDate: {
+        checkOutDate: {
           type: Date,
           default: null,
         },
-        checkinDate: {
+        checkInDate: {
           type: Date,
           default: null,
         },

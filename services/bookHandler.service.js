@@ -18,13 +18,12 @@ async function getIssuedDetails(_id) {
 
       if (totalLates > 0) penalty = totalLates * 5; // Rs: 5 is a penalty of each business day
 
-      const checkedOutDetails = {
-        issuer: book.issuedDetails.issuer,
-        requiredReturnDay: book.issuedDetails.returnDate,
-        penalty,
-      };
       return formatResponse(200, "Success", "Get Isssued Book Details", {
-        checkedOutDetails,
+        data: {
+          issuer: book.issuedDetails.issuer,
+          returnDate: book.issuedDetails.returnDate,
+          penalty,
+        },
       });
     }
     return formatResponse(200, "Error", "This book is not issued");
@@ -43,8 +42,8 @@ async function checkIn(_id) {
       if (bookHistory && bookHistory.bookId && bookHistory.history) {
         bookHistory.history.unshift({
           issuer: book.issuedDetails.issuer,
-          checkoutDate: book.issuedDetails.issuedDate,
-          checkinDate: new Date(),
+          checkOutDate: book.issuedDetails.issuedDate,
+          checkInDate: new Date(),
         });
 
         await BookIssuedHistory.findOneAndUpdate(
@@ -61,8 +60,8 @@ async function checkIn(_id) {
           history: [
             {
               issuer: book.issuedDetails.issuer,
-              checkoutDate: book.issuedDetails.issuedDate,
-              checkinDate: new Date(),
+              checkOutDate: book.issuedDetails.issuedDate,
+              checkInDate: new Date(),
             },
           ],
         });
