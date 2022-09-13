@@ -15,10 +15,9 @@ exports.requireSignin = (req, res, next) => {
           .json(formatResponse(statusCode || 500, "error", message));
       } else {
         let user = await User.findOne({ _id: decoded._id });
-        delete user.password;
-        delete user.userToken;
+        delete user?.password;
         req.user = user;
-        req.id = user._id.toString();
+        req.id = user?._id.toString();
         next();
       }
     });

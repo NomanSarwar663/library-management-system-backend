@@ -57,7 +57,6 @@ async function login(data) {
     throw new BaseError("Email and password is required", 404);
   }
   const user = await User.findOne({ email });
-  console.log(process.env.JWT_TOKEN_KEY);
   if (user && (await bcrypt.compare(password, user.password))) {
     token = jwt.sign(
       { _id: user._id, email: user.email },
